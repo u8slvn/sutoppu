@@ -1,5 +1,7 @@
 # Sutoppu
 
+[![Build Status](https://travis-ci.org/u8slvn/sutoppu.svg?branch=master)](https://travis-ci.org/u8slvn/sutoppu)
+
 **Sutoppu** (ストップ from English *Stop*) is a simple python implementation of Specification pattern.
 
 ## What is Specification Pattern?
