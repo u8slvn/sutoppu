@@ -13,7 +13,7 @@ See [Wikipedia](https://en.wikipedia.org/wiki/Specification_pattern).
 ## Example of use
 
 ```python
-    from sutoppu import AbstractSpecification
+    from sutoppu import Specification
 
 
     class Fruit:
@@ -24,8 +24,8 @@ See [Wikipedia](https://en.wikipedia.org/wiki/Specification_pattern).
 
 
     # Define your domain specifications
-    class FruitIsALemon(AbstractSpecification):
-        def is_satisfied_by(self, fruit) -> bool:
+    class FruitIsALemon(Specification):
+        def is_satisfied_by(self, fruit):
             return fruit.color == 'yellow' \
                    and fruit.sweetened is False \
                    and fruit.sour is True

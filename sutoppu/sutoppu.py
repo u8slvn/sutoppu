@@ -4,7 +4,7 @@
 from abc import ABC, abstractmethod
 
 
-class Specification(ABC):
+class AbstractSpecification(ABC):
     @abstractmethod
     def is_satisfied_by(self, candidate) -> bool:
         pass
@@ -22,22 +22,22 @@ class Specification(ABC):
         pass
 
 
-class AbstractSpecification(Specification):
+class Specification(AbstractSpecification):
     @abstractmethod
     def is_satisfied_by(self, candidate) -> bool:
         pass
 
-    def and_(self, specification: Specification) -> Specification:
-        return AndSpecification(self, specification)
+    def and_(self, spec: AbstractSpecification) -> AbstractSpecification:
+        return AndSpecification(self, spec)
 
-    def or_(self, specification: Specification) -> Specification:
-        return OrSpecification(self, specification)
+    def or_(self, spec: AbstractSpecification) -> AbstractSpecification:
+        return OrSpecification(self, spec)
 
-    def not_(self) -> Specification:
+    def not_(self) -> AbstractSpecification:
         return NotSpecification(self)
 
 
-class AndSpecification(AbstractSpecification):
+class AndSpecification(Specification):
     def __init__(self, spec_a: Specification, spec_b: Specification):
         self._spec_a = spec_a
         self._spec_b = spec_b
@@ -47,7 +47,7 @@ class AndSpecification(AbstractSpecification):
             and self._spec_b.is_satisfied_by(candidate)
 
 
-class OrSpecification(AbstractSpecification):
+class OrSpecification(Specification):
     def __init__(self, spec_a: Specification, spec_b: Specification):
         self._spec_a = spec_a
         self._spec_b = spec_b
@@ -57,7 +57,7 @@ class OrSpecification(AbstractSpecification):
             or self._spec_b.is_satisfied_by(candidate)
 
 
-class NotSpecification(AbstractSpecification):
+class NotSpecification(Specification):
     def __init__(self, spec: Specification):
         self._spec = spec
 

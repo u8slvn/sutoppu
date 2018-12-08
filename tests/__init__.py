@@ -1,4 +1,4 @@
-from sutoppu import AbstractSpecification
+from sutoppu import Specification
 
 
 class Fruit:
@@ -8,16 +8,16 @@ class Fruit:
         self.sour = sour
 
 
-class FruitIsYellow(AbstractSpecification):
+class FruitIsYellow(Specification):
     def is_satisfied_by(self, fruit) -> bool:
         return fruit.color == 'yellow'
 
 
-class FruitIsSweet(AbstractSpecification):
+class FruitIsSweet(Specification):
     def is_satisfied_by(self, fruit) -> bool:
         return fruit.sweet is True
 
 
-class FruitIsSour(AbstractSpecification):
+class FruitIsSour(Specification):
     def is_satisfied_by(self, fruit) -> bool:
         return fruit.sour is True
