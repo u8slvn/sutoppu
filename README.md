@@ -12,32 +12,66 @@ See [Wikipedia](https://en.wikipedia.org/wiki/Specification_pattern).
 
 ## Example of use
 
+### Basic usage
+
 ```python
-    from sutoppu import Specification
+from sutoppu import Specification
 
 
-    class Fruit:
-        def __init__(self, color, sweetened, sour):
-            self.color = color
-            self.sweetened = sweetened
-            self.sour = sour
+class Fruit:
+    def __init__(self, color, sweetened, sour):
+        self.color = color
+        self.sweetened = sweetened
+        self.sour = sour
 
 
-    # Define your domain specifications
-    class FruitIsALemon(Specification):
-        def is_satisfied_by(self, fruit):
-            return fruit.color == 'yellow' \
-                   and fruit.sweetened is False \
-                   and fruit.sour is True
+# Define your domain specifications
+class FruitIsALemon(Specification):
+    def is_satisfied_by(self, fruit):
+        return fruit.color == 'yellow' \
+               and fruit.sweetened is False \
+               and fruit.sour is True
 
 
-    lemon = Fruit(color='yellow', sweetened=False, sour=True)
+lemon = Fruit(color='yellow', sweetened=False, sour=True)
 
-    # Apply your specifications
-    if FruitIsYellow().is_satisfied_by(lemon):
-        print('This is a lemon!')
-    else:
-        print('This is not a lemon!')
+# Apply your specifications
+if FruitIsYellow().is_satisfied_by(lemon):
+    print('This is a lemon!')
+else:
+    print('This is not a lemon!')
+```
+
+### Statements
+
+#### `and_`
+
+```python
+my_spec = SpecificationA().and_(SpecificationB())
+```
+
+#### `and_not`
+
+```python
+my_spec = SpecificationA().and_not(SpecificationB())
+```
+
+#### `or_`
+
+```python
+my_spec = SpecificationA().or_(SpecificationB())
+```
+
+#### `or_not`
+
+```python
+my_spec = SpecificationA().or_not(SpecificationB())
+```
+
+#### `not_`
+
+```python
+my_spec = SpecificationA().not_()
 ```
 
 ---
