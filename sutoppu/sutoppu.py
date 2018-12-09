@@ -14,7 +14,15 @@ class AbstractSpecification(ABC):
         pass
 
     @abstractmethod
+    def and_not(self, specification):
+        pass
+
+    @abstractmethod
     def or_(self, specification):
+        pass
+
+    @abstractmethod
+    def or_not(self, specification):
         pass
 
     @abstractmethod
@@ -30,8 +38,14 @@ class Specification(AbstractSpecification):
     def and_(self, spec: AbstractSpecification) -> AbstractSpecification:
         return AndSpecification(self, spec)
 
+    def and_not(self, spec: AbstractSpecification) -> AbstractSpecification:
+        return AndNotSpecification(self, spec)
+
     def or_(self, spec: AbstractSpecification) -> AbstractSpecification:
         return OrSpecification(self, spec)
+
+    def or_not(self, spec: AbstractSpecification) -> AbstractSpecification:
+        return OrNotSpecification(self, spec)
 
     def not_(self) -> AbstractSpecification:
         return NotSpecification(self)
@@ -47,6 +61,16 @@ class AndSpecification(Specification):
             and self._spec_b.is_satisfied_by(candidate)
 
 
+class AndNotSpecification(Specification):
+    def __init__(self, spec_a: Specification, spec_b: Specification):
+        self._spec_a = spec_a
+        self._spec_b = spec_b
+
+    def is_satisfied_by(self, candidate) -> bool:
+        return self._spec_a.is_satisfied_by(candidate) \
+            and not self._spec_b.is_satisfied_by(candidate)
+
+
 class OrSpecification(Specification):
     def __init__(self, spec_a: Specification, spec_b: Specification):
         self._spec_a = spec_a
@@ -55,6 +79,16 @@ class OrSpecification(Specification):
     def is_satisfied_by(self, candidate) -> bool:
         return self._spec_a.is_satisfied_by(candidate) \
             or self._spec_b.is_satisfied_by(candidate)
+
+
+class OrNotSpecification(Specification):
+    def __init__(self, spec_a: Specification, spec_b: Specification):
+        self._spec_a = spec_a
+        self._spec_b = spec_b
+
+    def is_satisfied_by(self, candidate) -> bool:
+        return self._spec_a.is_satisfied_by(candidate) \
+            or not self._spec_b.is_satisfied_by(candidate)
 
 
 class NotSpecification(Specification):

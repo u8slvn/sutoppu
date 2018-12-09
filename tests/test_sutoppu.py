@@ -33,12 +33,35 @@ class TestSutoppu:
         assert result is expected
 
     @pytest.mark.parametrize('fruit, expected', [
+        (lemon, False),
+        (orange, False),
+        (apple, True),
+    ])
+    def test_and_not_specification(self, fruit, expected):
+        specification = FruitIsSweet().and_not(FruitIsSour())
+        result = specification.is_satisfied_by(fruit)
+
+        assert result is expected
+
+    @pytest.mark.parametrize('fruit, expected', [
         (lemon, True),
         (orange, True),
         (avocado, False),
     ])
     def test_or_specification(self, fruit, expected):
         specification = FruitIsSweet().or_(FruitIsSour())
+
+        result = specification.is_satisfied_by(fruit)
+
+        assert result is expected
+
+    @pytest.mark.parametrize('fruit, expected', [
+        (lemon, False),
+        (orange, True),
+        (apple, True),
+    ])
+    def test_or_not_specification(self, fruit, expected):
+        specification = FruitIsSweet().or_not(FruitIsYellow())
 
         result = specification.is_satisfied_by(fruit)
 
@@ -63,11 +86,11 @@ class TestSutoppu:
         (avocado, True),
     ])
     def test_chain_specification(self, fruit, expected):
-        specification = FruitIsSour().and_(
-            FruitIsYellow().not_()
+        specification = FruitIsSour().and_not(
+            FruitIsYellow()
         ).or_(
-            FruitIsSour().not_().and_(
-                FruitIsSweet().not_()
+            FruitIsSour().not_().and_not(
+                FruitIsSweet()
             )
         )
 
