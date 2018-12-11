@@ -50,6 +50,17 @@ class Specification(AbstractSpecification):
     def not_(self) -> AbstractSpecification:
         return NotSpecification(self)
 
+    # Bitwise operators overloading for a shorter syntax
+
+    def __and__(self, spec: AbstractSpecification):
+        return self.and_(spec)
+
+    def __or__(self, spec: AbstractSpecification):
+        return self.or_(spec)
+
+    def __invert__(self):
+        return self.not_()
+
 
 class AndSpecification(Specification):
     def __init__(self, spec_a: Specification, spec_b: Specification):

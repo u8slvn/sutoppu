@@ -97,3 +97,54 @@ class TestSutoppu:
         result = specification.is_satisfied_by(fruit)
 
         assert result is expected
+
+
+class TestSutoppuBitwiseSyntax:
+    @pytest.mark.parametrize('fruit, expected', [
+        (lemon, False),
+        (orange, True),
+        (apple, False),
+    ])
+    def test_and_specification(self, fruit, expected):
+        specification = FruitIsSweet() & FruitIsSour()
+        result = specification.is_satisfied_by(fruit)
+
+        assert result is expected
+
+    @pytest.mark.parametrize('fruit, expected', [
+        (lemon, True),
+        (orange, True),
+        (avocado, False),
+    ])
+    def test_or_specification(self, fruit, expected):
+        specification = FruitIsSweet() | FruitIsSour()
+
+        result = specification.is_satisfied_by(fruit)
+
+        assert result is expected
+
+    @pytest.mark.parametrize('fruit, expected', [
+        (lemon, False),
+        (orange, False),
+        (apple, True),
+    ])
+    def test_not_specification(self, fruit, expected):
+        specification = ~ FruitIsSour()
+
+        result = specification.is_satisfied_by(fruit)
+
+        assert result is expected
+
+    @pytest.mark.parametrize('fruit, expected', [
+        (lemon, False),
+        (orange, True),
+        (apple, False),
+        (avocado, True),
+    ])
+    def test_chain_specification(self, fruit, expected):
+        specification = (FruitIsSour() & ~ FruitIsYellow()) \
+            | (~ FruitIsSour() & ~ FruitIsSweet())
+
+        result = specification.is_satisfied_by(fruit)
+
+        assert result is expected
