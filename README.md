@@ -10,68 +10,93 @@ See [Wikipedia](https://en.wikipedia.org/wiki/Specification_pattern).
 
 > In computer programming, the specification pattern is a particular software design pattern, whereby business rules can be recombined by chaining the business rules together using boolean logic. The pattern is frequently used in the context of domain-driven design.
 
-## Example of use
+## Basic usage
 
-### Basic usage
+### Example
 
 ```python
 from sutoppu import Specification
 
 
 class Fruit:
-    def __init__(self, color, sweetened, sour):
+    def __init__(self, color, sweet, bitter):
         self.color = color
-        self.sweetened = sweetened
-        self.sour = sour
+        self.sweet = sweet
+        self.bitter = bitter
 
 
 # Define your domain specifications
-class FruitIsALemon(Specification):
+class FruitIsBitter(Specification):
     def is_satisfied_by(self, fruit):
-        return fruit.color == 'yellow' \
-               and fruit.sweetened is False \
-               and fruit.sour is True
+        return fruit.bitter is True
 
 
-lemon = Fruit(color='yellow', sweetened=False, sour=True)
+class FruitIsSweet(Specification):
+    def is_satisfied_by(self, fruit):
+        return fruit.sweet is True
+
+
+class FruitIsYellow(Specification):
+    def is_satisfied_by(self, fruit):
+        return fruit.color == 'yellow'
+
+
+lemon = Fruit(color='yellow', sweet=False, bitter=True)
 
 # Apply your specifications
-if FruitIsYellow().is_satisfied_by(lemon):
+is_a_lemon = FruitIsYellow().and_(FruitIsBitter().and_not(FruitIsSweet()))
+
+if is_a_lemon.is_satisfied_by(lemon):
     print('This is a lemon!')
 else:
     print('This is not a lemon!')
 ```
 
-### Statements
-
-#### `and_`
+### Operators
 
 ```python
+# and_
 my_spec = SpecificationA().and_(SpecificationB())
-```
 
-#### `and_not`
-
-```python
+# and_not
 my_spec = SpecificationA().and_not(SpecificationB())
-```
 
-#### `or_`
-
-```python
+# or_
 my_spec = SpecificationA().or_(SpecificationB())
-```
 
-#### `or_not`
-
-```python
+# or_not
 my_spec = SpecificationA().or_not(SpecificationB())
+
+# not_
+my_spec = SpecificationA().not_()
 ```
 
-#### `not_`
+## Extra syntax
+
+For lighter declarations you can also use bitwise operators.
 
 ```python
-my_spec = SpecificationA().not_()
+# and
+my_spec = SpecificationA() & SpecificationB()
+
+# or
+my_spec = SpecificationA() | SpecificationB()
+
+# not
+my_spec = ~ SpecificationA()
+```
+
+### Example
+
+```python
+from somerules import FruitIsYellow, FruitIsBitter, FruitIsSweet
+from fruits import apple
+
+# we want a sweet non yellow fruit or a bitter fruit
+my_spec = (FruitIsSweet() & ~ FruitIsYellow()) | FruitIsBitter()
+
+if my_spec.is_satisfied_by(apple):
+    print('I want to eat that fruit!')
 ```
 
 ---
