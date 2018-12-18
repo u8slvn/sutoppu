@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/u8slvn/sutoppu.svg?branch=master)](https://travis-ci.org/u8slvn/sutoppu)
 [![Coverage Status](https://coveralls.io/repos/github/u8slvn/sutoppu/badge.svg?branch=master)](https://coveralls.io/github/u8slvn/sutoppu?branch=master)
+[![Pypi Version](https://img.shields.io/badge/pypi-1.2-blue.svg)](https://pypi.org/project/sutoppu/)
 
 **Sutoppu** (ストップ from English *Stop*) is a simple python implementation of Specification pattern.
 
@@ -12,6 +13,10 @@ See [Wikipedia](https://en.wikipedia.org/wiki/Specification_pattern).
 > In computer programming, the specification pattern is a particular software design pattern, whereby business rules can be recombined by chaining the business rules together using boolean logic. The pattern is frequently used in the context of domain-driven design.
 
 ## Basic usage
+
+```bash
+$ pip install sutoppu
+```
 
 ### Example
 

@@ -6,3 +6,6 @@ settings.ini
 *.pyc
 .coverage
 htmlcov/
+dist/
+build/
+*.egg-info/
