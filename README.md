@@ -1,6 +1,7 @@
 # Sutoppu
 
 [![Build Status](https://travis-ci.org/u8slvn/sutoppu.svg?branch=master)](https://travis-ci.org/u8slvn/sutoppu)
+[![Coverage Status](https://coveralls.io/repos/github/u8slvn/sutoppu/badge.svg?branch=master)](https://coveralls.io/github/u8slvn/sutoppu?branch=master)
 
 **Sutoppu** (ストップ from English *Stop*) is a simple python implementation of Specification pattern.
 
