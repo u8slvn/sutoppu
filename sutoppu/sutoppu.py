@@ -7,33 +7,33 @@ from abc import ABC, abstractmethod
 class AbstractSpecification(ABC):
     @abstractmethod
     def is_satisfied_by(self, candidate):
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def and_(self, specification):
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def and_not(self, specification):
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def or_(self, specification):
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def or_not(self, specification):
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def not_(self):
-        pass
+        raise NotImplementedError
 
 
 class Specification(AbstractSpecification):
     @abstractmethod
     def is_satisfied_by(self, candidate):
-        pass
+        raise NotImplementedError
 
     def and_(self, spec):
         return AndSpecification(self, spec)
