@@ -9,15 +9,21 @@ class Fruit:
 
 
 class FruitIsYellow(Specification):
-    def is_satisfied_by(self, fruit) -> bool:
+    description = 'Fruit must be yellow.'
+
+    def _is_satisfied_by(self, fruit):
         return fruit.color == 'yellow'
 
 
 class FruitIsSweet(Specification):
-    def is_satisfied_by(self, fruit) -> bool:
+    description = 'Fruit must be sweet.'
+
+    def _is_satisfied_by(self, fruit):
         return fruit.sweet is True
 
 
 class FruitIsSour(Specification):
-    def is_satisfied_by(self, fruit) -> bool:
+    description = 'Fruit must be sour.'
+
+    def _is_satisfied_by(self, fruit):
         return fruit.sour is True

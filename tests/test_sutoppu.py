@@ -148,3 +148,33 @@ class TestSutoppuBitwiseSyntax:
         result = specification.is_satisfied_by(fruit)
 
         assert result is expected
+
+
+class TestSutoppuFailureReport:
+    @pytest.mark.parametrize('fruit, expected, failed', [
+        (lemon, False, {'FruitIsSweet': 'Fruit must be sweet.',
+                        'NotFruitIsSour': 'Not ~ Fruit must be sour.'}),
+        (orange, False, {'NotFruitIsSour': 'Not ~ Fruit must be sour.'}),
+        (avocado, False, {'FruitIsSweet': 'Fruit must be sweet.'}),
+    ])
+    def test_basic_report_specification(self, fruit, expected, failed):
+        specification = FruitIsSweet().and_(FruitIsSour().not_())
+        result = specification.is_satisfied_by(fruit)
+
+        assert result is expected
+        assert specification.failed == failed
+
+    def test_report_reset_after_two_uses(self):
+        specification = FruitIsSweet().and_(FruitIsSour().not_())
+
+        result = specification.is_satisfied_by(orange)
+
+        expected_failed = {'NotFruitIsSour': 'Not ~ Fruit must be sour.'}
+        assert result is False
+        assert specification.failed == expected_failed
+
+        result = specification.is_satisfied_by(avocado)
+
+        expected_failed = {'FruitIsSweet': 'Fruit must be sweet.'}
+        assert result is False
+        assert specification.failed == expected_failed

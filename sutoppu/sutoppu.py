@@ -31,9 +31,30 @@ class AbstractSpecification(ABC):
 
 
 class Specification(AbstractSpecification):
-    @abstractmethod
+    description = 'This must apply something.'
+
+    def __init__(self):
+        self.failed = dict()
+
     def is_satisfied_by(self, candidate):
+        self.failed = dict()
+        result = self._is_satisfied_by(candidate)
+        self._report_error(result)
+
+        return result
+
+    @abstractmethod
+    def _is_satisfied_by(self, candidate):
         raise NotImplementedError
+
+    def _report_error(self, result):
+        if not result:
+            class_name = self.__class__.__name__
+            self.failed[class_name] = self.get_description()
+
+    @classmethod
+    def get_description(cls):
+        return cls.description
 
     def and_(self, spec):
         return AndSpecification(self, spec)
@@ -47,8 +68,8 @@ class Specification(AbstractSpecification):
     def or_not(self, spec):
         return OrNotSpecification(self, spec)
 
-    def not_(self):
-        return NotSpecification(self)
+    def not_(spec):
+        return NotSpecification(spec)
 
     # Bitwise operators overloading for a shorter syntax
 
@@ -62,49 +83,52 @@ class Specification(AbstractSpecification):
         return self.not_()
 
 
-class AndSpecification(Specification):
-    def __init__(self, spec_a, spec_b):
-        self._spec_a = spec_a
-        self._spec_b = spec_b
+class OperatorSpecification(Specification):
+    def __init__(self, *specifications):
+        super().__init__()
+        self._specs = list(specifications)
+        assert 1 <= len(self._specs) <= 2
 
-    def is_satisfied_by(self, candidate):
-        return self._spec_a.is_satisfied_by(candidate) \
-            and self._spec_b.is_satisfied_by(candidate)
+    def _report_error(self, result):
+        for spec in self._specs:
+            self.failed = {**self.failed, **spec.failed}
 
+    def _is_satisfied_by(self, candidate):
+        results = [spec.is_satisfied_by(candidate) for spec in self._specs]
 
-class AndNotSpecification(Specification):
-    def __init__(self, spec_a, spec_b):
-        self._spec_a = spec_a
-        self._spec_b = spec_b
+        return self._check(*results)
 
-    def is_satisfied_by(self, candidate):
-        return self._spec_a.is_satisfied_by(candidate) \
-            and not self._spec_b.is_satisfied_by(candidate)
-
-
-class OrSpecification(Specification):
-    def __init__(self, spec_a, spec_b):
-        self._spec_a = spec_a
-        self._spec_b = spec_b
-
-    def is_satisfied_by(self, candidate):
-        return self._spec_a.is_satisfied_by(candidate) \
-            or self._spec_b.is_satisfied_by(candidate)
+    @abstractmethod
+    def _check(self, candidate):
+        raise NotImplementedError
 
 
-class OrNotSpecification(Specification):
-    def __init__(self, spec_a, spec_b):
-        self._spec_a = spec_a
-        self._spec_b = spec_b
-
-    def is_satisfied_by(self, candidate):
-        return self._spec_a.is_satisfied_by(candidate) \
-            or not self._spec_b.is_satisfied_by(candidate)
+class AndSpecification(OperatorSpecification):
+    def _check(self, spec_a, spec_b):
+        return spec_a and spec_b
 
 
-class NotSpecification(Specification):
-    def __init__(self, spec):
-        self._spec = spec
+class AndNotSpecification(OperatorSpecification):
+    def _check(self, spec_a, spec_b):
+        return spec_a and not spec_b
 
-    def is_satisfied_by(self, candidate):
-        return not self._spec.is_satisfied_by(candidate)
+
+class OrSpecification(OperatorSpecification):
+    def _check(self, spec_a, spec_b):
+        return spec_a or spec_b
+
+
+class OrNotSpecification(OperatorSpecification):
+    def _check(self, spec_a, spec_b):
+        return spec_a or not spec_b
+
+
+class NotSpecification(OperatorSpecification):
+    def _report_error(self, result):
+        if not result and isinstance(self._specs[0], Specification):
+            class_name = f"Not{self._specs[0].__class__.__name__}"
+            description = f"Not ~ {self._specs[0].get_description()}"
+            self.failed[class_name] = description
+
+    def _check(self, spec):
+        return not spec
