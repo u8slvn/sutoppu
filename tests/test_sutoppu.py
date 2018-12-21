@@ -3,12 +3,12 @@
 
 import pytest
 
-from tests import Fruit, FruitIsSweet, FruitIsSour, FruitIsYellow
+from tests import Fruit, FruitIsSweet, FruitIsBitter, FruitIsYellow
 
-lemon = Fruit(color='yellow', sweet=False, sour=True)
-orange = Fruit(color='orange', sweet=True, sour=True)
-apple = Fruit(color='red', sweet=True, sour=False)
-avocado = Fruit(color='green', sweet=False, sour=False)
+lemon = Fruit(color='yellow', sweet=False, bitter=True)
+orange = Fruit(color='orange', sweet=True, bitter=True)
+apple = Fruit(color='red', sweet=True, bitter=False)
+avocado = Fruit(color='green', sweet=False, bitter=False)
 
 
 class TestSutoppu:
@@ -27,7 +27,7 @@ class TestSutoppu:
         (apple, False),
     ])
     def test_and_specification(self, fruit, expected):
-        specification = FruitIsSweet().and_(FruitIsSour())
+        specification = FruitIsSweet().and_(FruitIsBitter())
         result = specification.is_satisfied_by(fruit)
 
         assert result is expected
@@ -38,7 +38,7 @@ class TestSutoppu:
         (apple, True),
     ])
     def test_and_not_specification(self, fruit, expected):
-        specification = FruitIsSweet().and_not(FruitIsSour())
+        specification = FruitIsSweet().and_not(FruitIsBitter())
         result = specification.is_satisfied_by(fruit)
 
         assert result is expected
@@ -49,7 +49,7 @@ class TestSutoppu:
         (avocado, False),
     ])
     def test_or_specification(self, fruit, expected):
-        specification = FruitIsSweet().or_(FruitIsSour())
+        specification = FruitIsSweet().or_(FruitIsBitter())
 
         result = specification.is_satisfied_by(fruit)
 
@@ -73,7 +73,7 @@ class TestSutoppu:
         (apple, True),
     ])
     def test_not_specification(self, fruit, expected):
-        specification = FruitIsSour().not_()
+        specification = FruitIsBitter().not_()
 
         result = specification.is_satisfied_by(fruit)
 
@@ -86,10 +86,10 @@ class TestSutoppu:
         (avocado, True),
     ])
     def test_chain_specification(self, fruit, expected):
-        specification = FruitIsSour().and_not(
+        specification = FruitIsBitter().and_not(
             FruitIsYellow()
         ).or_(
-            FruitIsSour().not_().and_not(
+            FruitIsBitter().not_().and_not(
                 FruitIsSweet()
             )
         )
@@ -106,7 +106,7 @@ class TestSutoppuBitwiseSyntax:
         (apple, False),
     ])
     def test_and_specification(self, fruit, expected):
-        specification = FruitIsSweet() & FruitIsSour()
+        specification = FruitIsSweet() & FruitIsBitter()
         result = specification.is_satisfied_by(fruit)
 
         assert result is expected
@@ -117,7 +117,7 @@ class TestSutoppuBitwiseSyntax:
         (avocado, False),
     ])
     def test_or_specification(self, fruit, expected):
-        specification = FruitIsSweet() | FruitIsSour()
+        specification = FruitIsSweet() | FruitIsBitter()
 
         result = specification.is_satisfied_by(fruit)
 
@@ -129,7 +129,7 @@ class TestSutoppuBitwiseSyntax:
         (apple, True),
     ])
     def test_not_specification(self, fruit, expected):
-        specification = ~ FruitIsSour()
+        specification = ~ FruitIsBitter()
 
         result = specification.is_satisfied_by(fruit)
 
@@ -142,8 +142,8 @@ class TestSutoppuBitwiseSyntax:
         (avocado, True),
     ])
     def test_chain_specification(self, fruit, expected):
-        specification = (FruitIsSour() & ~ FruitIsYellow()) \
-            | (~ FruitIsSour() & ~ FruitIsSweet())
+        specification = (FruitIsBitter() & ~ FruitIsYellow()) \
+            | (~ FruitIsBitter() & ~ FruitIsSweet())
 
         result = specification.is_satisfied_by(fruit)
 
@@ -153,23 +153,23 @@ class TestSutoppuBitwiseSyntax:
 class TestSutoppuFailureReport:
     @pytest.mark.parametrize('fruit, expected, failed', [
         (lemon, False, {'FruitIsSweet': 'Fruit must be sweet.',
-                        'NotFruitIsSour': 'Not ~ Fruit must be sour.'}),
-        (orange, False, {'NotFruitIsSour': 'Not ~ Fruit must be sour.'}),
+                        'NotFruitIsBitter': 'Not ~ Fruit must be bitter.'}),
+        (orange, False, {'NotFruitIsBitter': 'Not ~ Fruit must be bitter.'}),
         (avocado, False, {'FruitIsSweet': 'Fruit must be sweet.'}),
     ])
     def test_basic_report_specification(self, fruit, expected, failed):
-        specification = FruitIsSweet().and_(FruitIsSour().not_())
+        specification = FruitIsSweet().and_(FruitIsBitter().not_())
         result = specification.is_satisfied_by(fruit)
 
         assert result is expected
         assert specification.failed == failed
 
     def test_report_reset_after_two_uses(self):
-        specification = FruitIsSweet().and_(FruitIsSour().not_())
+        specification = FruitIsSweet().and_(FruitIsBitter().not_())
 
         result = specification.is_satisfied_by(orange)
 
-        expected_failed = {'NotFruitIsSour': 'Not ~ Fruit must be sour.'}
+        expected_failed = {'NotFruitIsBitter': 'Not ~ Fruit must be bitter.'}
         assert result is False
         assert specification.failed == expected_failed
 

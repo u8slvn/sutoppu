@@ -31,7 +31,7 @@ class AbstractSpecification(ABC):
 
 
 class Specification(AbstractSpecification):
-    description = 'This must apply something.'
+    description = 'This must check something.'
 
     def __init__(self):
         self.failed = dict()
@@ -57,19 +57,19 @@ class Specification(AbstractSpecification):
         return cls.description
 
     def and_(self, spec):
-        return AndSpecification(self, spec)
+        return _AndSpecification(self, spec)
 
     def and_not(self, spec):
-        return AndNotSpecification(self, spec)
+        return _AndNotSpecification(self, spec)
 
     def or_(self, spec):
-        return OrSpecification(self, spec)
+        return _OrSpecification(self, spec)
 
     def or_not(self, spec):
-        return OrNotSpecification(self, spec)
+        return _OrNotSpecification(self, spec)
 
     def not_(spec):
-        return NotSpecification(spec)
+        return _NotSpecification(spec)
 
     # Bitwise operators overloading for a shorter syntax
 
@@ -87,7 +87,9 @@ class OperatorSpecification(Specification):
     def __init__(self, *specifications):
         super().__init__()
         self._specs = list(specifications)
-        assert 1 <= len(self._specs) <= 2
+        assert 1 <= len(self._specs) <= 2, \
+            'OperatorSpecification classes should be instantiated with '\
+            'at minimum one parameter, and maximum two.'
 
     def _report_error(self, result):
         for spec in self._specs:
@@ -103,27 +105,27 @@ class OperatorSpecification(Specification):
         raise NotImplementedError
 
 
-class AndSpecification(OperatorSpecification):
+class _AndSpecification(OperatorSpecification):
     def _check(self, spec_a, spec_b):
         return spec_a and spec_b
 
 
-class AndNotSpecification(OperatorSpecification):
+class _AndNotSpecification(OperatorSpecification):
     def _check(self, spec_a, spec_b):
         return spec_a and not spec_b
 
 
-class OrSpecification(OperatorSpecification):
+class _OrSpecification(OperatorSpecification):
     def _check(self, spec_a, spec_b):
         return spec_a or spec_b
 
 
-class OrNotSpecification(OperatorSpecification):
+class _OrNotSpecification(OperatorSpecification):
     def _check(self, spec_a, spec_b):
         return spec_a or not spec_b
 
 
-class NotSpecification(OperatorSpecification):
+class _NotSpecification(OperatorSpecification):
     def _report_error(self, result):
         if not result and isinstance(self._specs[0], Specification):
             class_name = f"Not{self._specs[0].__class__.__name__}"

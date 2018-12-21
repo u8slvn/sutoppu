@@ -2,10 +2,10 @@ from sutoppu import Specification
 
 
 class Fruit:
-    def __init__(self, color, sweet, sour):
+    def __init__(self, color, sweet, bitter):
         self.color = color
         self.sweet = sweet
-        self.sour = sour
+        self.bitter = bitter
 
 
 class FruitIsYellow(Specification):
@@ -22,8 +22,8 @@ class FruitIsSweet(Specification):
         return fruit.sweet is True
 
 
-class FruitIsSour(Specification):
-    description = 'Fruit must be sour.'
+class FruitIsBitter(Specification):
+    description = 'Fruit must be bitter.'
 
     def _is_satisfied_by(self, fruit):
-        return fruit.sour is True
+        return fruit.bitter is True
