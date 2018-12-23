@@ -62,13 +62,13 @@ class Specification(AbstractSpecification):
         return _AndSpecification(self, spec)
 
     def and_not(self, spec):
-        return _AndNotSpecification(self, spec)
+        return _AndSpecification(self, spec.not_())
 
     def or_(self, spec):
         return _OrSpecification(self, spec)
 
     def or_not(self, spec):
-        return _OrNotSpecification(self, spec)
+        return _OrSpecification(self, spec.not_())
 
     def not_(self):
         return _NotSpecification(self)
@@ -112,19 +112,9 @@ class _AndSpecification(OperatorSpecification):
         return spec_a and spec_b
 
 
-class _AndNotSpecification(OperatorSpecification):
-    def _check(self, spec_a, spec_b):
-        return spec_a and not spec_b
-
-
 class _OrSpecification(OperatorSpecification):
     def _check(self, spec_a, spec_b):
         return spec_a or spec_b
-
-
-class _OrNotSpecification(OperatorSpecification):
-    def _check(self, spec_a, spec_b):
-        return spec_a or not spec_b
 
 
 class _NotSpecification(OperatorSpecification):
