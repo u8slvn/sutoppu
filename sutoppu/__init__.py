@@ -41,7 +41,7 @@ class Specification(AbstractSpecification):
     def is_satisfied_by(self, candidate):
         self.failed = dict()
         result = self._is_satisfied_by(candidate)
-        self._report_error(result)
+        self._report_fail(result)
 
         return result
 
@@ -49,7 +49,7 @@ class Specification(AbstractSpecification):
     def _is_satisfied_by(self, candidate):
         raise NotImplementedError
 
-    def _report_error(self, result):
+    def _report_fail(self, result):
         if not result:
             class_name = self.__class__.__name__
             self.failed[class_name] = self.get_description()
@@ -93,7 +93,7 @@ class OperatorSpecification(Specification):
             'OperatorSpecification classes should be instantiated with ' \
             'at minimum one parameter, and maximum two.'
 
-    def _report_error(self, result):
+    def _report_fail(self, result):
         for spec in self._specs:
             self.failed = {**self.failed, **spec.failed}
 
@@ -118,7 +118,7 @@ class _OrSpecification(OperatorSpecification):
 
 
 class _NotSpecification(OperatorSpecification):
-    def _report_error(self, result):
+    def _report_fail(self, result):
         if not result and isinstance(self._specs[0], Specification):
             class_name = f"Not{self._specs[0].__class__.__name__}"
             description = f"Not ~ {self._specs[0].get_description()}"
