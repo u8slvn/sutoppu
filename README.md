@@ -33,17 +33,17 @@ class Fruit:
 
 # Define your domain specifications
 class FruitIsBitter(Specification):
-    def is_satisfied_by(self, fruit):
+    def _is_satisfied_by(self, fruit):
         return fruit.bitter is True
 
 
 class FruitIsSweet(Specification):
-    def is_satisfied_by(self, fruit):
+    def _is_satisfied_by(self, fruit):
         return fruit.sweet is True
 
 
 class FruitIsYellow(Specification):
-    def is_satisfied_by(self, fruit):
+    def _is_satisfied_by(self, fruit):
         return fruit.color == 'yellow'
 
 
@@ -103,6 +103,53 @@ my_spec = (FruitIsSweet() & ~ FruitIsYellow()) | FruitIsBitter()
 
 if my_spec.is_satisfied_by(apple):
     print('I want to eat that fruit!')
+```
+
+## Failure report
+
+It can be difficult to know which specification failed in a complex rule. Sutoppu allows to list all the failed verifications by getting the `failed` attribute after a specification use.
+The `failed` attribute is reset each time the specification is used. For each failed specification, it returns a dict with the name of the specification class for key and the decription provide in the class for value. In the case where the specification failed with a `not` condition, the class name and the description are prefixed with `Not`. 
+
+### Example
+
+```python
+from sutoppu import Specification
+import Fruit
+
+
+class FruitIsBitter(Specification):
+    description = 'The given fruit must be bitter.'
+
+    def _is_satisfied_by(self, fruit):
+        return fruit.bitter is True
+
+
+class FruitIsSweet(Specification):
+    description = 'The given fruit must be sweet.'
+
+    def _is_satisfied_by(self, fruit):
+        return fruit.sweet is True
+
+
+class FruitIsYellow(Specification):
+    description = 'The given fruit must be yellow.'
+
+    def _is_satisfied_by(self, fruit):
+        return fruit.color == 'yellow'
+
+
+apple = Fruit(color='red', sweet=True, bitter=False)
+
+is_a_lemon = FruitIsYellow() & FruitIsBitter() & ~ FruitIsSweet()
+
+if is_a_lemon.is_satisfied_by(apple):
+    print('A lemon!')
+
+print(is_a_lemon.failed)
+
+# >>> {'FruitIsYellow': 'The given fruit must be yellow.',
+#      'FruitIsBitter': 'The given fruit must be bitter.',
+#      'NotFruitIsSweet': 'Not ~ The given fruit must be sweet.'}
 ```
 
 ---
