@@ -14,6 +14,8 @@ See [Wikipedia](https://en.wikipedia.org/wiki/Specification_pattern).
 
 ## Basic usage
 
+### Install
+
 ```bash
 $ pip install sutoppu
 ```

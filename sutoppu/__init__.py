@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 # coding: utf-8
+"""Sutoppu
+
+This module provide a simple use of the specification pattern.
+
+"""
 
 from abc import ABC, abstractmethod
 
@@ -7,6 +12,11 @@ __all__ = ['Specification']
 
 
 class AbstractSpecification(ABC):
+    """Abstract specification interface
+
+    Each specification class must implement this interface.
+
+    """
     @abstractmethod
     def is_satisfied_by(self, candidate):
         raise NotImplementedError
@@ -33,12 +43,23 @@ class AbstractSpecification(ABC):
 
 
 class Specification(AbstractSpecification):
+    """Specification base class
+
+    Each domain specification must inherit from this class.
+
+    """
     description = 'This must check something.'
 
     def __init__(self):
         self.failed = dict()
 
     def is_satisfied_by(self, candidate):
+        """The front `is satisfied by` method
+
+        This method must never be overwrite. This is the entrypoint of
+        the specification providing the failure report mechanisme.
+
+        """
         self.failed = dict()
         result = self._is_satisfied_by(candidate)
         self._report_fail(result)
@@ -47,9 +68,21 @@ class Specification(AbstractSpecification):
 
     @abstractmethod
     def _is_satisfied_by(self, candidate):
+        """The back `is satisfied by` method
+
+        It is where we write the custom domain rule by overwriting this
+        method.
+
+        """
         raise NotImplementedError
 
     def _report_fail(self, result):
+        """Failure reporting method
+
+        Each time a specification verification failed, this method
+        report it in the `failed` dict attribute.
+
+        """
         if not result:
             class_name = self.__class__.__name__
             self.failed[class_name] = self.get_description()
