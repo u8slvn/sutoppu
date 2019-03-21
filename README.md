@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/u8slvn/sutoppu/badge.svg?branch=master)](https://coveralls.io/github/u8slvn/sutoppu?branch=master)
 [![Pypi Version](https://img.shields.io/pypi/v/sutoppu.svg)](https://pypi.org/project/sutoppu/)
 
-**Sutoppu** (ストップ from English *Stop*) is a simple python implementation of Specification pattern.
+**Sutoppu** (ストップ - Japanese from English *Stop*) is a simple python implementation of Specification pattern.
 
 ## What is Specification Pattern?
 
@@ -44,16 +44,21 @@ class FruitIsSweet(Specification):
         return fruit.sweet is True
 
 
-class FruitIsYellow(Specification):
+class FruitIsColored(Specification):
+    def __init__(self, color):
+        super().__init__()  # do not forget super()
+        self.color = color
+
     def _is_satisfied_by(self, fruit):
-        return fruit.color == 'yellow'
+        return self.color == fruit.color
 
 
 lemon = Fruit(color='yellow', sweet=False, bitter=True)
 
-# Apply your specifications
-is_a_lemon = FruitIsYellow().and_(FruitIsBitter().and_not(FruitIsSweet()))
+# build your specifications
+is_a_lemon = FruitIsColored('yellow').and_(FruitIsBitter().and_not(FruitIsSweet()))
 
+# apply your specification
 if is_a_lemon.is_satisfied_by(lemon):
     print('This is a lemon!')
 else:
@@ -107,10 +112,10 @@ if my_spec.is_satisfied_by(apple):
     print('I want to eat that fruit!')
 ```
 
-## Failure report
+## Error report
 
-It can be difficult to know which specification failed in a complex rule. Sutoppu allows to list all the failed verifications by getting the `failed` attribute after a specification use.
-The `failed` attribute is reset each time the specification is used. For each failed specification, it returns a dict with the name of the specification class for key and the decription provide in the class for value. In the case where the specification failed with a `not` condition, the class name and the description are prefixed with `Not`. 
+It can be difficult to know which specification failed in a complex rule. Sutoppu allows to list all the failed verifications by getting the `errors` attribute after a specification use.
+The `errors` attribute is reset each time the specification is used. For each failed specification, it returns a dict with the name of the specification class for key and the description provide in the class for value. In the case where the specification failed with a `not` condition, the description are prefixed with `Not ~`.
 
 ### Example
 
@@ -133,25 +138,30 @@ class FruitIsSweet(Specification):
         return fruit.sweet is True
 
 
-class FruitIsYellow(Specification):
-    description = 'The given fruit must be yellow.'
+class FruitIsColored(Specification):
+    description = 'The given fruit must be {color}.'
+    
+    def __init__(self, color):
+        super().__init__()
+        self.color = color
+        self.description = self.description.format(color=color)
 
     def _is_satisfied_by(self, fruit):
-        return fruit.color == 'yellow'
+        return self.color == fruit.color
 
 
 apple = Fruit(color='red', sweet=True, bitter=False)
 
-is_a_lemon = FruitIsYellow() & FruitIsBitter() & ~ FruitIsSweet()
+is_a_lemon = FruitIsColored('yellow') & FruitIsBitter() & ~ FruitIsSweet()
 
 if is_a_lemon.is_satisfied_by(apple):
     print('A lemon!')
 
-print(is_a_lemon.failed)
+print(is_a_lemon.errors)
 
-# >>> {'FruitIsYellow': 'The given fruit must be yellow.',
+# >>> {'FruitIsColored': 'The given fruit must be yellow.',
 #      'FruitIsBitter': 'The given fruit must be bitter.',
-#      'NotFruitIsSweet': 'Not ~ The given fruit must be sweet.'}
+#      'FruitIsSweet': 'Not ~ The given fruit must be sweet.'}
 ```
 
 ---
