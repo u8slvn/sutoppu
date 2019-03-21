@@ -7,7 +7,7 @@ README = (HERE / "README.md").read_text()
 
 setup(
     name="sutoppu",
-    version="1.2",
+    version="1.3",
     description="A simple python implementation of Specification pattern.",
     long_description=README,
     long_description_content_type="text/markdown",
@@ -19,6 +19,8 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Development Status :: 5 - Production/Stable",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Operating System :: OS Independent",
         "Topic :: Software Development :: Build Tools",
         "Topic :: Software Development :: Libraries :: Python Modules",

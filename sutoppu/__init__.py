@@ -9,6 +9,8 @@ Copyright (C) 2019 - u8slvn - Sylvain Collas
 This package is released under the MIT License:
 http://www.opensource.org/licenses/mit-license.php
 
+version: 1.3
+
 """
 
 from abc import ABC, abstractmethod
