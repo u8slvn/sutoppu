@@ -3,6 +3,7 @@
 
 import pytest
 
+from sutoppu import Specification
 from tests import Fruit, FruitIsBitter, FruitIsSweet, FruitIsYellow
 
 lemon = Fruit(color='yellow', sweet=False, bitter=True)
@@ -12,6 +13,13 @@ avocado = Fruit(color='green', sweet=False, bitter=False)
 
 
 class TestSutoppu:
+    def test_specification_must_have_is_satisfied_by(self):
+        class WrongSpecification(Specification):
+            """You must implement is_satisfied_by method."""
+
+        with pytest.raises(TypeError):
+            WrongSpecification()
+
     @pytest.mark.parametrize('fruit, expected', [
         (lemon, True),
         (orange, False),

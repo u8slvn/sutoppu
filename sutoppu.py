@@ -9,17 +9,19 @@ This module is released under the MIT License:
 http://www.opensource.org/licenses/mit-license.php
 """
 
-from abc import abstractmethod
+from abc import ABCMeta, abstractmethod
 import functools
 
 __all__ = ['Specification']
 __version__ = '0.1.0'
 
 
-class _SpecificationMeta(type):
-    """Add a bit of magic, _SpecificationMeta automatically apply the class
-    method '_report_errors' as decorator for the 'is_satisfied_by' method. It
-    allows to directly call 'is_satisfied_by'.
+class _SpecificationMeta(ABCMeta):
+    """Add a little bit of magic, _SpecificationMeta automatically apply the
+    class method '_report_errors' as decorator for the 'is_satisfied_by'
+    method. It allows to simplify Specification declaration by declaring only
+    'is_satisfied_by' without paying attention of the '_report_errors'
+    decorator.
     """
 
     def __new__(mcs, name, bases, namespace):
