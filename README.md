@@ -1,8 +1,10 @@
 # Sutoppu
 
+[![Pypi Version](https://img.shields.io/pypi/v/sutoppu.svg)](https://pypi.org/project/sutoppu/)
+[![Python Version](https://img.shields.io/pypi/pyversions/sutoppu)](https://pypi.org/project/sutoppu/)
 [![Build Status](https://travis-ci.org/u8slvn/sutoppu.svg?branch=master)](https://travis-ci.org/u8slvn/sutoppu)
 [![Coverage Status](https://coveralls.io/repos/github/u8slvn/sutoppu/badge.svg?branch=master)](https://coveralls.io/github/u8slvn/sutoppu?branch=master)
-[![Pypi Version](https://img.shields.io/pypi/v/sutoppu.svg)](https://pypi.org/project/sutoppu/)
+[![Project license](https://img.shields.io/pypi/l/sutoppu)](https://pypi.org/project/sutoppu/)
 
 **Sutoppu** (ストップ - Japanese from English *Stop*) is a simple python implementation of Specification pattern.
 
@@ -12,11 +14,13 @@ See [Wikipedia](https://en.wikipedia.org/wiki/Specification_pattern).
 
 > In computer programming, the specification pattern is a particular software design pattern, whereby business rules can be recombined by chaining the business rules together using boolean logic. The pattern is frequently used in the context of domain-driven design.
 
+More information: [Eric Evans and Martin Fowler article about Specifications](https://www.martinfowler.com/apsupp/spec.pdf)
+
 ## Basic usage
 
-### Install
+### Installation
 
-```bash
+```sh
 $ pip install sutoppu
 ```
 
@@ -27,13 +31,12 @@ from sutoppu import Specification
 
 
 class Fruit:
-    def __init__(self, color, sweet, bitter):
+    def __init__(self, color: str, sweet: bool, bitter: bool):
         self.color = color
         self.sweet = sweet
         self.bitter = bitter
 
 
-# Define your domain specifications
 class FruitIsBitter(Specification):
     def _is_satisfied_by(self, fruit):
         return fruit.bitter is True
@@ -51,65 +54,44 @@ class FruitIsColored(Specification):
 
     def _is_satisfied_by(self, fruit):
         return self.color == fruit.color
+```
 
+```python
+>>> lemon = Fruit(color='yellow', sweet=False, bitter=True)
+>>> is_a_lemon = FruitIsColored('yellow') & FruitIsBitter() & ~FruitIsSweet()
+>>> is_a_lemon.is_satisfied_by(lemon)
+True
+```
 
-lemon = Fruit(color='yellow', sweet=False, bitter=True)
+### Lighter syntax
 
-# build your specifications
-is_a_lemon = FruitIsColored('yellow').and_(FruitIsBitter().and_not(FruitIsSweet()))
+If you do not find the `is_satisfied_by` method very convenient you can also directly call the specification as below.
 
-# apply your specification
-if is_a_lemon.is_satisfied_by(lemon):
-    print('This is a lemon!')
-else:
-    print('This is not a lemon!')
+```python
+>>> lemon = Fruit(color='yellow', sweet=False, bitter=True)
+>>> is_a_lime = FruitIsColored('green') & FruitIsBitter() & ~FruitIsSweet()
+>>> is_a_lime(lemon)
+False
 ```
 
 ### Operators
 
+And:
+
 ```python
-# and_
-my_spec = SpecificationA().and_(SpecificationB())
-
-# and_not
-my_spec = SpecificationA().and_not(SpecificationB())
-
-# or_
-my_spec = SpecificationA().or_(SpecificationB())
-
-# or_not
-my_spec = SpecificationA().or_not(SpecificationB())
-
-# not_
-my_spec = SpecificationA().not_()
+>>> my_spec = SpecificationA() & SpecificationB()
 ```
 
-## Extra syntax
-
-For lighter declarations you can also use bitwise operators.
+Or:
 
 ```python
-# and
-my_spec = SpecificationA() & SpecificationB()
-
-# or
-my_spec = SpecificationA() | SpecificationB()
-
-# not
-my_spec = ~ SpecificationA()
+>>> my_spec = SpecificationA() | SpecificationB()
 ```
 
-### Example
+Not:
 
 ```python
-from somerules import FruitIsYellow, FruitIsBitter, FruitIsSweet
-from fruits import apple
-
-# we want a sweet non yellow fruit or a bitter fruit
-my_spec = (FruitIsSweet() & ~ FruitIsYellow()) | FruitIsBitter()
-
-if my_spec.is_satisfied_by(apple):
-    print('I want to eat that fruit!')
+>>> my_spec = ~SpecificationA()
 ```
 
 ## Error report
@@ -117,11 +99,10 @@ if my_spec.is_satisfied_by(apple):
 It can be difficult to know which specification failed in a complex rule. Sutoppu allows to list all the failed verifications by getting the `errors` attribute after a specification use.
 The `errors` attribute is reset each time the specification is used. For each failed specification, it returns a dict with the name of the specification class for key and the description provide in the class for value. In the case where the specification failed with a `not` condition, the description are prefixed with `Not ~`.
 
-### Example
+
 
 ```python
 from sutoppu import Specification
-import Fruit
 
 
 class FruitIsBitter(Specification):
@@ -148,22 +129,17 @@ class FruitIsColored(Specification):
 
     def _is_satisfied_by(self, fruit):
         return self.color == fruit.color
-
-
-apple = Fruit(color='red', sweet=True, bitter=False)
-
-is_a_lemon = FruitIsColored('yellow') & FruitIsBitter() & ~ FruitIsSweet()
-
-if is_a_lemon.is_satisfied_by(apple):
-    print('A lemon!')
-
-print(is_a_lemon.errors)
-
-# >>> {'FruitIsColored': 'The given fruit must be yellow.',
-#      'FruitIsBitter': 'The given fruit must be bitter.',
-#      'FruitIsSweet': 'Not ~ The given fruit must be sweet.'}
 ```
 
----
-
-For more information: [Eric Evans and Martin Fowler article about Specifications](https://www.martinfowler.com/apsupp/spec.pdf)
+```python
+>>> apple = Fruit(color='red', sweet=True, bitter=False)
+>>> is_a_lemon = FruitIsColored('yellow') & FruitIsBitter() & ~ FruitIsSweet()
+>>> is_a_lemon.is_satisfied_by(apple)
+False
+>>> is_a_lemon.errors
+{
+    'FruitIsColored': 'The given fruit must be yellow.',
+    'FruitIsBitter': 'The given fruit must be bitter.',
+    'FruitIsSweet': 'Not ~ The given fruit must be sweet.'
+}
+```
