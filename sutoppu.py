@@ -52,7 +52,7 @@ class Specification(metaclass=_SpecificationMeta):
         return wrapper
 
     @abstractmethod
-    def is_satisfied_by(self, candidate: any):
+    def is_satisfied_by(self, candidate: any) -> bool:
         raise NotImplementedError
 
     def _report_error(self, result: bool):
@@ -105,7 +105,7 @@ class _AndOrSpecification(Specification):
         return self._check(*results)
 
     @abstractmethod
-    def _check(self, spec_a, spec_b):
+    def _check(self, spec_a: bool, spec_b: bool):
         """Check the operator logic."""
         raise NotImplementedError
 

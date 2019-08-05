@@ -24,7 +24,7 @@ More information: [Eric Evans and Martin Fowler article about Specifications](ht
 $ pip install sutoppu
 ```
 
-### Example
+### Usage
 
 ```python
 from sutoppu import Specification
@@ -38,21 +38,28 @@ class Fruit:
 
 
 class FruitIsBitter(Specification):
-    def _is_satisfied_by(self, fruit):
+    description = 'The given fruit must be bitter.'
+
+    def is_satisfied_by(self, fruit: Fruit):
         return fruit.bitter is True
 
 
 class FruitIsSweet(Specification):
-    def _is_satisfied_by(self, fruit):
+    description = 'The given fruit must be sweet.'
+    
+    def is_satisfied_by(self, fruit: Fruit):
         return fruit.sweet is True
 
 
 class FruitIsColored(Specification):
+    description = 'The given fruit must be {color}.'
+    
     def __init__(self, color):
-        super().__init__()  # do not forget super()
+        super().__init__()
         self.color = color
+        self.description = self.description.format(color=color)
 
-    def _is_satisfied_by(self, fruit):
+    def is_satisfied_by(self, fruit: Fruit):
         return self.color == fruit.color
 ```
 
@@ -61,17 +68,6 @@ class FruitIsColored(Specification):
 >>> is_a_lemon = FruitIsColored('yellow') & FruitIsBitter() & ~FruitIsSweet()
 >>> is_a_lemon.is_satisfied_by(lemon)
 True
-```
-
-### Lighter syntax
-
-If you do not find the `is_satisfied_by` method very convenient you can also directly call the specification as below.
-
-```python
->>> lemon = Fruit(color='yellow', sweet=False, bitter=True)
->>> is_a_lime = FruitIsColored('green') & FruitIsBitter() & ~FruitIsSweet()
->>> is_a_lime(lemon)
-False
 ```
 
 ### Operators
@@ -94,42 +90,21 @@ Not:
 >>> my_spec = ~SpecificationA()
 ```
 
-## Error report
+### Lighter syntax
 
-It can be difficult to know which specification failed in a complex rule. Sutoppu allows to list all the failed verifications by getting the `errors` attribute after a specification use.
-The `errors` attribute is reset each time the specification is used. For each failed specification, it returns a dict with the name of the specification class for key and the description provide in the class for value. In the case where the specification failed with a `not` condition, the description are prefixed with `Not ~`.
-
-
+If you do not find the `is_satisfied_by` method very convenient you can also directly call the specification as below.
 
 ```python
-from sutoppu import Specification
-
-
-class FruitIsBitter(Specification):
-    description = 'The given fruit must be bitter.'
-
-    def _is_satisfied_by(self, fruit):
-        return fruit.bitter is True
-
-
-class FruitIsSweet(Specification):
-    description = 'The given fruit must be sweet.'
-
-    def _is_satisfied_by(self, fruit):
-        return fruit.sweet is True
-
-
-class FruitIsColored(Specification):
-    description = 'The given fruit must be {color}.'
-    
-    def __init__(self, color):
-        super().__init__()
-        self.color = color
-        self.description = self.description.format(color=color)
-
-    def _is_satisfied_by(self, fruit):
-        return self.color == fruit.color
+>>> lemon = Fruit(color='yellow', sweet=False, bitter=True)
+>>> is_a_lime = FruitIsColored('green') & FruitIsBitter() & ~FruitIsSweet()
+>>> is_a_lime(lemon)
+False
 ```
+
+### Error reporting
+
+It can be difficult to know which specification failed in a complex rule. Sutoppu allows to list all the failed specifications by getting the `errors` attribute after use.
+The `errors` attribute is reset each time the specification is used. For each failed specification, it returns a dict with the name of the specification class for key and the description provide in the class for value. In the case where the specification failed with a `not` condition, the description are prefixed with `Not ~`.
 
 ```python
 >>> apple = Fruit(color='red', sweet=True, bitter=False)

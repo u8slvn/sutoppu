@@ -43,7 +43,6 @@ setup(
         'DDD',
         'domain-driven-design'
         'business-rules',
-        'predicate',
         'verification',
     ],
     include_package_data=True,
