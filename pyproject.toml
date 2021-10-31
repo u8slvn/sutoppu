@@ -1,0 +1,55 @@
+[tool.poetry]
+name = "sutoppu"
+
+version = "0.1.1"
+description = "A simple python implementation of Specification pattern."
+authors = ["u8slvn <u8slvn@gmail.com>"]
+
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/u8slvn/markdownio"
+homepage = "https://github.com/u8slvn/markdownio"
+
+classifiers = [
+    "Intended Audience :: Developers",
+    "Development Status :: 5 - Production/Stable",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Natural Language :: English",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Operating System :: OS Independent",
+]
+keywords=[
+    "specification",
+    "specification-pattern",
+    "DDD",
+    "domain-driven-design",
+    "business-rules",
+    "verification",
+]
+
+include = [
+    "LICENSE",
+    "CHANGELOG.md",
+    "README.md",
+]
+
+[tool.poetry.dependencies]
+python = "^3.6.2"
+
+[tool.poetry.dev-dependencies]
+pytest-cov = "^3.0.0"
+pytest-mock = "^3.6.1"
+flake8 = "^4.0.1"
+black = "^21.9b0"
+pytest = "^6.2.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

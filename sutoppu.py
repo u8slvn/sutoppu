@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# coding: utf-8
-
 """Sutoppu
 A simple implementation of Specification pattern.
 
@@ -12,8 +9,8 @@ http://www.opensource.org/licenses/mit-license.php
 from abc import ABCMeta, abstractmethod
 import functools
 
-__all__ = ['Specification']
-__version__ = '0.1.0'
+__all__ = ["Specification"]
+__version__ = "0.1.1"
 
 
 class _SpecificationMeta(ABCMeta):
@@ -26,7 +23,7 @@ class _SpecificationMeta(ABCMeta):
 
     def __new__(mcs, name, bases, namespace):
         cls = super().__new__(mcs, name, bases, namespace)
-        if hasattr(cls, 'is_satisfied_by') and hasattr(cls, '_report_errors'):
+        if hasattr(cls, "is_satisfied_by") and hasattr(cls, "_report_errors"):
             cls.is_satisfied_by = cls._report_errors(cls.is_satisfied_by)
         return cls
 
@@ -35,7 +32,8 @@ class Specification(metaclass=_SpecificationMeta):
     """Specification base class, each domain specification must inherit from
     this class.
     """
-    description = 'No description provided.'
+
+    description = "No description provided."
 
     def __init__(self):
         self.errors = {}
@@ -66,13 +64,13 @@ class Specification(metaclass=_SpecificationMeta):
     def class_name(self):
         return self.__class__.__name__
 
-    def __and__(self, spec: 'Specification') -> '_AndSpecification':
+    def __and__(self, spec: "Specification") -> "_AndSpecification":
         return _AndSpecification(self, spec)
 
-    def __or__(self, spec: 'Specification') -> '_OrSpecification':
+    def __or__(self, spec: "Specification") -> "_OrSpecification":
         return _OrSpecification(self, spec)
 
-    def __invert__(self) -> '_NotSpecification':  # not
+    def __invert__(self) -> "_NotSpecification":  # not
         return _NotSpecification(self)
 
     def __call__(self, candidate: any):
@@ -80,7 +78,7 @@ class Specification(metaclass=_SpecificationMeta):
         return self.is_satisfied_by(candidate)
 
     def __repr__(self):
-        return f'<{self.class_name}: {self.description}>'
+        return f"<{self.class_name}: {self.description}>"
 
 
 class _AndOrSpecification(Specification):
