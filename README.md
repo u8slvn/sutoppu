@@ -2,9 +2,10 @@
 
 [![Pypi Version](https://img.shields.io/pypi/v/sutoppu.svg)](https://pypi.org/project/sutoppu/)
 [![Python Version](https://img.shields.io/pypi/pyversions/sutoppu)](https://pypi.org/project/sutoppu/)
-[![Build Status](https://travis-ci.org/u8slvn/sutoppu.svg?branch=master)](https://travis-ci.org/u8slvn/sutoppu)
+[![CI](https://github.com/u8slvn/sutoppu/actions/workflows/ci.yml/badge.svg)](https://github.com/u8slvn/sutoppu/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/u8slvn/sutoppu/badge.svg?branch=master)](https://coveralls.io/github/u8slvn/sutoppu?branch=master)
 [![Project license](https://img.shields.io/pypi/l/sutoppu)](https://pypi.org/project/sutoppu/)
+[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 **Sutoppu** (ストップ - Japanese from English *Stop*) is a simple python implementation of Specification pattern.
 
@@ -51,29 +52,26 @@ class FruitIsSweet(Specification):
         return fruit.sweet is True
 
 
-class FruitIsColored(Specification):
-    description = 'The given fruit must be {color}.'
-    
-    def __init__(self, color):
-        super().__init__()
-        self.color = color
-        self.description = self.description.format(color=color)
+class FruitIsYellow(Specification):
+    description = 'The given fruit must be yellow.'
 
     def is_satisfied_by(self, fruit: Fruit):
-        return self.color == fruit.color
+        return self.color == 'yellow'
 ```
 
 ```python
 >>> lemon = Fruit(color='yellow', sweet=False, bitter=True)
->>> is_a_lemon = FruitIsColored('yellow') & FruitIsBitter() & ~FruitIsSweet()
+>>> is_a_lemon = FruitIsYellow() & FruitIsBitter() & ~FruitIsSweet()
 >>> is_a_lemon.is_satisfied_by(lemon)
 True
 ```
 
 ### Operators
 
-And:
+Bitwise operators are overload to provide simple syntax.
 
+And:
+yellow
 ```python
 >>> my_spec = SpecificationA() & SpecificationB()
 ```
@@ -96,7 +94,7 @@ If you do not find the `is_satisfied_by` method very convenient you can also dir
 
 ```python
 >>> lemon = Fruit(color='yellow', sweet=False, bitter=True)
->>> is_a_lime = FruitIsColored('green') & FruitIsBitter() & ~FruitIsSweet()
+>>> is_a_lime = FruitIsGreen() & FruitIsBitter() & ~FruitIsSweet()
 >>> is_a_lime(lemon)
 False
 ```
@@ -104,11 +102,11 @@ False
 ### Error reporting
 
 It can be difficult to know which specification failed in a complex rule. Sutoppu allows to list all the failed specifications by getting the `errors` attribute after use.
-The `errors` attribute is reset each time the specification is used. For each failed specification, it returns a dict with the name of the specification class for key and the description provide in the class for value. In the case where the specification failed with a `not` condition, the description are prefixed with `Not ~`.
+The `errors` attribute is reset each time the specification is used. For each failed specification, it returns a dict with the name of the specification class for key and the description provide in the class for value. In the case where the specification failed with a `not` condition, the description is prefixed with `Not ~`.
 
 ```python
 >>> apple = Fruit(color='red', sweet=True, bitter=False)
->>> is_a_lemon = FruitIsColored('yellow') & FruitIsBitter() & ~ FruitIsSweet()
+>>> is_a_lemon = FruitIsYellow() & FruitIsBitter() & ~ FruitIsSweet()
 >>> is_a_lemon.is_satisfied_by(apple)
 False
 >>> is_a_lemon.errors

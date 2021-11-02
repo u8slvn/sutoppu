@@ -1,6 +1,8 @@
 # Changelog
 
-## 0.1.1 (2021--)
+## 0.1.1 (2021-11-02)
+
+* Update documentation
 
 ### Dev
 
