@@ -2,6 +2,8 @@
 
 ## 0.1.1 (2021--)
 
+* Update documentation
+
 ### Dev
 
 * Move CI from TravisCI to Github Actions
