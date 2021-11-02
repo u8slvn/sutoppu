@@ -1,14 +1,14 @@
 [tool.poetry]
 name = "sutoppu"
 
-version = "0.1.1"
+version = "0.1.2"
 description = "A simple python implementation of Specification pattern."
 authors = ["u8slvn <u8slvn@gmail.com>"]
 
 license = "MIT"
 readme = "README.md"
-repository = "https://github.com/u8slvn/markdownio"
-homepage = "https://github.com/u8slvn/markdownio"
+repository = "https://github.com/u8slvn/sutoppu"
+homepage = "https://github.com/u8slvn/sutoppu"
 
 classifiers = [
     "Intended Audience :: Developers",
