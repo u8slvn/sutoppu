@@ -71,7 +71,7 @@ True
 Bitwise operators are overload to provide simple syntax.
 
 And:
-yellow
+
 ```python
 >>> my_spec = SpecificationA() & SpecificationB()
 ```
