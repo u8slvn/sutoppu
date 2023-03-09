@@ -10,7 +10,7 @@ from abc import ABCMeta, abstractmethod
 import functools
 
 __all__ = ["Specification"]
-__version__ = "0.1.2"
+__version__ = "1.0.0"
 
 
 class _SpecificationMeta(ABCMeta):

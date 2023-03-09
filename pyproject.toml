@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "sutoppu"
 
-version = "0.1.2"
+version = "1.0.0"
 description = "A simple python implementation of Specification pattern."
 authors = ["u8slvn <u8slvn@gmail.com>"]
 
@@ -18,7 +18,6 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Natural Language :: English",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -41,7 +40,7 @@ include = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.7.0"
 
 [tool.poetry.dev-dependencies]
 pytest-cov = "^3.0.0"

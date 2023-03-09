@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.0 (2022-??-??)
+
+* Remove deprecated python 3.6 support.
+* Add python 3.11.
+
 ## 0.1.2 (2021-11-02)
 
 ### Dev
