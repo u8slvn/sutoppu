@@ -7,6 +7,7 @@ help: ## List all the command helps.
 
 tests: ## Run tests.
 	@poetry run pytest tests/ -x -vv
+	@poetry run mypy sutoppu.py
 
 quality: ## Check quality.
 	@poetry run flake8

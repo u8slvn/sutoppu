@@ -2,8 +2,11 @@
 
 ## 1.0.0 (2022-??-??)
 
+### Dev
+
 * Remove deprecated python 3.6 support.
 * Add python 3.11.
+* Add typing /w mypy.
 
 ## 0.1.2 (2021-11-02)
 
