@@ -32,7 +32,7 @@ from sutoppu import Specification
 
 
 class Fruit:
-    def __init__(self, color: str, sweet: bool, bitter: bool):
+    def __init__(self, color: str, sweet: bool, bitter: bool) -> None:
         self.color = color
         self.sweet = sweet
         self.bitter = bitter
@@ -41,21 +41,21 @@ class Fruit:
 class FruitIsBitter(Specification):
     description = 'The given fruit must be bitter.'
 
-    def is_satisfied_by(self, fruit: Fruit):
+    def is_satisfied_by(self, fruit: Fruit) -> bool:
         return fruit.bitter is True
 
 
 class FruitIsSweet(Specification):
     description = 'The given fruit must be sweet.'
     
-    def is_satisfied_by(self, fruit: Fruit):
+    def is_satisfied_by(self, fruit: Fruit) -> bool:
         return fruit.sweet is True
 
 
 class FruitIsYellow(Specification):
     description = 'The given fruit must be yellow.'
 
-    def is_satisfied_by(self, fruit: Fruit):
+    def is_satisfied_by(self, fruit: Fruit) -> bool:
         return self.color == 'yellow'
 ```
 
