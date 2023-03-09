@@ -4,7 +4,7 @@
 
 ### Dev
 
-* Remove deprecated python 3.6 support.
+* Remove deprecated python 3.6 and 3.7 support.
 * Add python 3.11.
 * Add typing /w mypy.
 
