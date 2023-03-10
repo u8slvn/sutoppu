@@ -56,7 +56,7 @@ class FruitIsYellow(Specification):
     description = 'The given fruit must be yellow.'
 
     def is_satisfied_by(self, fruit: Fruit) -> bool:
-        return self.color == 'yellow'
+        return fruit.color == 'yellow'
 ```
 
 ```python
