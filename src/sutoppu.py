@@ -11,13 +11,13 @@ import functools
 
 from abc import ABCMeta
 from abc import abstractmethod
+from importlib import metadata
+from typing import Any
+from typing import Callable
 
 
 __all__ = ["Specification"]
-__version__ = "1.0.0"
-
-from typing import Any
-from typing import Callable
+__version__ = metadata.version("sutoppu")
 
 
 class _SpecificationMeta(ABCMeta):
