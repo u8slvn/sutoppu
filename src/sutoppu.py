@@ -23,7 +23,9 @@ __version__ = metadata.version("sutoppu")
 
 
 class _SpecificationMeta(ABCMeta):
-    """Add a little bit of magic, _SpecificationMeta automatically apply the
+    """Specification metaclass
+
+    Add a little bit of magic, _SpecificationMeta automatically apply the
     class method '_report_errors' as decorator for the 'is_satisfied_by'
     method. It allows to simplify Specification declaration by declaring only
     'is_satisfied_by' without paying attention of the '_report_errors'
@@ -46,8 +48,9 @@ T = TypeVar("T")
 
 
 class Specification(Generic[T], metaclass=_SpecificationMeta):
-    """Specification base class, each domain specification must inherit from
-    this class.
+    """Specification base class
+
+    Each domain specification must inherit from this class.
     """
 
     description = "No description provided."
@@ -93,7 +96,7 @@ class Specification(Generic[T], metaclass=_SpecificationMeta):
         return _NotSpecification(self)
 
     def __call__(self, candidate: Any) -> bool:
-        """Extra syntax for more facilities."""
+        """Additional syntax for ease of use."""
         return self.is_satisfied_by(candidate)
 
     def __repr__(self) -> str:
@@ -109,9 +112,8 @@ class _AndOrSpecification(Specification[T]):
 
     def _report_error(self, _: bool) -> None:
         """Gets the children spec errors and merge them into its own.
-        The goal behind this it to propagate the errors through all the
-        parents specifications.
-        The result argument is useless in this case.
+        Allows to propagate errors through all parents specifications.
+        The result parameter is ignored in this case.
         """
         for spec in self._specs:
             self.errors = {**self.errors, **spec.errors}

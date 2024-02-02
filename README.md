@@ -38,21 +38,21 @@ class Fruit:
         self.bitter = bitter
 
 
-class FruitIsBitter(Specification):
+class FruitIsBitter(Specification[Fruit]):
     description = 'The given fruit must be bitter.'
 
     def is_satisfied_by(self, fruit: Fruit) -> bool:
         return fruit.bitter is True
 
 
-class FruitIsSweet(Specification):
+class FruitIsSweet(Specification[Fruit]):
     description = 'The given fruit must be sweet.'
 
     def is_satisfied_by(self, fruit: Fruit) -> bool:
         return fruit.sweet is True
 
 
-class FruitIsYellow(Specification):
+class FruitIsYellow(Specification[Fruit]):
     description = 'The given fruit must be yellow.'
 
     def is_satisfied_by(self, fruit: Fruit) -> bool:
@@ -68,7 +68,7 @@ True
 
 ### Operators
 
-Bitwise operators are overload to provide simple syntax.
+**Sutoppu** uses bitwise operator overloading to provide simplified syntax.
 
 And:
 
@@ -90,7 +90,7 @@ Not:
 
 ### Lighter syntax
 
-If you do not find the `is_satisfied_by` method very convenient you can also directly call the specification as below.
+If you find the `is_satisfied_by` method inconvenient you can alternatively call the specification as shown below.
 
 ```python
 >>> lemon = Fruit(color='yellow', sweet=False, bitter=True)
@@ -101,8 +101,8 @@ False
 
 ### Error reporting
 
-It can be difficult to know which specification failed in a complex rule. Sutoppu allows to list all the failed specifications by getting the `errors` attribute after use.
-The `errors` attribute is reset each time the specification is used. For each failed specification, it returns a dict with the name of the specification class for key and the description provide in the class for value. In the case where the specification failed with a `not` condition, the description is prefixed with `Not ~`.
+It can be difficult to know which specification failed in complex concatenated rules. Sutoppu allows to list all the failed specifications by getting the `errors` attribute after use.
+The `errors` attribute is reset each time the specification is used. For each failed specification, it returns a dict with the name of the specification class as key and the description provided in the class as value. In the case where the specification failed with a `not` condition, the description is prefixed with `Not ~`.
 
 ```python
 >>> apple = Fruit(color='red', sweet=True, bitter=False)
