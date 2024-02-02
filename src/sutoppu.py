@@ -14,6 +14,8 @@ from abc import abstractmethod
 from importlib import metadata
 from typing import Any
 from typing import Callable
+from typing import Generic
+from typing import TypeVar
 
 
 __all__ = ["Specification"]
@@ -40,7 +42,10 @@ class _SpecificationMeta(ABCMeta):
         return class_
 
 
-class Specification(metaclass=_SpecificationMeta):
+T = TypeVar("T")
+
+
+class Specification(Generic[T], metaclass=_SpecificationMeta):
     """Specification base class, each domain specification must inherit from
     this class.
     """
@@ -52,10 +57,10 @@ class Specification(metaclass=_SpecificationMeta):
 
     @classmethod
     def _report_errors(
-        cls, func: Callable[[Specification, Any], bool]
-    ) -> Callable[[Specification, Any], bool]:
+        cls, func: Callable[[Specification[T], T], bool]
+    ) -> Callable[[Specification[T], T], bool]:
         @functools.wraps(func)
-        def wrapper(self: Specification, candidate: Any) -> bool:
+        def wrapper(self: Specification[T], candidate: T) -> bool:
             self.errors = {}  # reset the errors dict
             result = func(self, candidate)
             self._report_error(result)
@@ -64,7 +69,7 @@ class Specification(metaclass=_SpecificationMeta):
         return wrapper
 
     @abstractmethod
-    def is_satisfied_by(self, candidate: Any) -> bool:
+    def is_satisfied_by(self, candidate: T) -> bool:
         raise NotImplementedError
 
     def _report_error(self, result: bool) -> None:
@@ -78,13 +83,13 @@ class Specification(metaclass=_SpecificationMeta):
     def class_name(self) -> str:
         return self.__class__.__name__
 
-    def __and__(self, spec: Specification) -> _AndSpecification:
+    def __and__(self, spec: Specification[T]) -> _AndSpecification[T]:
         return _AndSpecification(self, spec)
 
-    def __or__(self, spec: Specification) -> _OrSpecification:
+    def __or__(self, spec: Specification[T]) -> _OrSpecification[T]:
         return _OrSpecification(self, spec)
 
-    def __invert__(self) -> _NotSpecification:  # not
+    def __invert__(self) -> _NotSpecification[T]:  # not
         return _NotSpecification(self)
 
     def __call__(self, candidate: Any) -> bool:
@@ -95,10 +100,10 @@ class Specification(metaclass=_SpecificationMeta):
         return f"<{self.class_name}: {self.description}>"
 
 
-class _AndOrSpecification(Specification):
+class _AndOrSpecification(Specification[T]):
     """Base class for 'And' and 'Or' specifications."""
 
-    def __init__(self, spec_a: Specification, spec_b: Specification) -> None:
+    def __init__(self, spec_a: Specification[T], spec_b: Specification[T]) -> None:
         super().__init__()
         self._specs = (spec_a, spec_b)
 
@@ -111,7 +116,7 @@ class _AndOrSpecification(Specification):
         for spec in self._specs:
             self.errors = {**self.errors, **spec.errors}
 
-    def is_satisfied_by(self, candidate: Any) -> bool:
+    def is_satisfied_by(self, candidate: T) -> bool:
         results = (spec.is_satisfied_by(candidate) for spec in self._specs)
 
         return self._check(*results)
@@ -122,18 +127,18 @@ class _AndOrSpecification(Specification):
         raise NotImplementedError
 
 
-class _AndSpecification(_AndOrSpecification):
+class _AndSpecification(_AndOrSpecification[T]):
     def _check(self, spec_a: bool, spec_b: bool) -> bool:
         return spec_a and spec_b
 
 
-class _OrSpecification(_AndOrSpecification):
+class _OrSpecification(_AndOrSpecification[T]):
     def _check(self, spec_a: bool, spec_b: bool) -> bool:
         return spec_a or spec_b
 
 
-class _NotSpecification(Specification):
-    def __init__(self, spec: Specification) -> None:
+class _NotSpecification(Specification[T]):
+    def __init__(self, spec: Specification[T]) -> None:
         super().__init__()
         self._spec = spec
 
@@ -146,7 +151,7 @@ class _NotSpecification(Specification):
             description = f"Not ~ {self._spec.description}"
             self.errors.update({self._spec.class_name: description})
 
-    def is_satisfied_by(self, candidate: Any) -> bool:
+    def is_satisfied_by(self, candidate: T) -> bool:
         result = self._spec.is_satisfied_by(candidate)
 
         return not result
