@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from sutoppu import Specification
 
 
@@ -12,7 +14,7 @@ class FruitIsYellow(Specification):
     description = "Fruit must be yellow."
 
     def is_satisfied_by(self, fruit):
-        return fruit.color == 'yellow'
+        return fruit.color == "yellow"
 
 
 class FruitIsSweet(Specification):
@@ -29,7 +31,7 @@ class FruitIsBitter(Specification):
         return fruit.bitter is True
 
 
-lemon = Fruit(color='yellow', sweet=False, bitter=True)
-orange = Fruit(color='orange', sweet=True, bitter=True)
-apple = Fruit(color='red', sweet=True, bitter=False)
-avocado = Fruit(color='green', sweet=False, bitter=False)
+lemon = Fruit(color="yellow", sweet=False, bitter=True)
+orange = Fruit(color="orange", sweet=True, bitter=True)
+apple = Fruit(color="red", sweet=True, bitter=False)
+avocado = Fruit(color="green", sweet=False, bitter=False)

@@ -1,8 +1,16 @@
+from __future__ import annotations
+
 import pytest
 
 from sutoppu import Specification
-from tests.conftest import (FruitIsBitter, FruitIsSweet, FruitIsYellow, apple,
-                            avocado, lemon, orange)
+
+from tests.conftest import FruitIsBitter
+from tests.conftest import FruitIsSweet
+from tests.conftest import FruitIsYellow
+from tests.conftest import apple
+from tests.conftest import avocado
+from tests.conftest import lemon
+from tests.conftest import orange
 
 
 def test_specification_must_have_is_satisfied_by():
@@ -13,20 +21,26 @@ def test_specification_must_have_is_satisfied_by():
         WrongSpecification()
 
 
-@pytest.mark.parametrize('fruit, expected', [
-    (lemon, True),
-    (orange, False),
-])
+@pytest.mark.parametrize(
+    "fruit, expected",
+    [
+        (lemon, True),
+        (orange, False),
+    ],
+)
 def test_satisfied_specification(fruit, expected):
     result = FruitIsYellow().is_satisfied_by(fruit)
 
     assert result is expected
 
 
-@pytest.mark.parametrize('fruit, expected', [
-    (lemon, True),
-    (orange, False),
-])
+@pytest.mark.parametrize(
+    "fruit, expected",
+    [
+        (lemon, True),
+        (orange, False),
+    ],
+)
 def test_satisfied_callable_specification(fruit, expected):
     specification = FruitIsYellow()
 
@@ -35,11 +49,14 @@ def test_satisfied_callable_specification(fruit, expected):
     assert result is expected
 
 
-@pytest.mark.parametrize('fruit, expected', [
-    (lemon, False),
-    (orange, True),
-    (apple, False),
-])
+@pytest.mark.parametrize(
+    "fruit, expected",
+    [
+        (lemon, False),
+        (orange, True),
+        (apple, False),
+    ],
+)
 def test_and_specification(fruit, expected):
     specification = FruitIsSweet() & FruitIsBitter()
     result = specification.is_satisfied_by(fruit)
@@ -47,11 +64,14 @@ def test_and_specification(fruit, expected):
     assert result is expected
 
 
-@pytest.mark.parametrize('fruit, expected', [
-    (lemon, True),
-    (orange, True),
-    (avocado, False),
-])
+@pytest.mark.parametrize(
+    "fruit, expected",
+    [
+        (lemon, True),
+        (orange, True),
+        (avocado, False),
+    ],
+)
 def test_or_specification(fruit, expected):
     specification = FruitIsSweet() | FruitIsBitter()
 
@@ -60,28 +80,35 @@ def test_or_specification(fruit, expected):
     assert result is expected
 
 
-@pytest.mark.parametrize('fruit, expected', [
-    (lemon, False),
-    (orange, False),
-    (apple, True),
-])
+@pytest.mark.parametrize(
+    "fruit, expected",
+    [
+        (lemon, False),
+        (orange, False),
+        (apple, True),
+    ],
+)
 def test_not_specification(fruit, expected):
-    specification = ~ FruitIsBitter()
+    specification = ~FruitIsBitter()
 
     result = specification.is_satisfied_by(fruit)
 
     assert result is expected
 
 
-@pytest.mark.parametrize('fruit, expected', [
-    (lemon, False),
-    (orange, True),
-    (apple, False),
-    (avocado, True),
-])
+@pytest.mark.parametrize(
+    "fruit, expected",
+    [
+        (lemon, False),
+        (orange, True),
+        (apple, False),
+        (avocado, True),
+    ],
+)
 def test_chain_specification(fruit, expected):
-    specification = (FruitIsBitter() & ~FruitIsYellow()) \
-                    | (~ FruitIsBitter() & ~FruitIsSweet())
+    specification = (FruitIsBitter() & ~FruitIsYellow()) | (
+        ~FruitIsBitter() & ~FruitIsSweet()
+    )
 
     result = specification.is_satisfied_by(fruit)
 
@@ -90,5 +117,5 @@ def test_chain_specification(fruit, expected):
 
 def test_repr():
     specification = FruitIsYellow()
-    expected = '<FruitIsYellow: Fruit must be yellow.>'
-    assert expected == f'{specification!r}'
+    expected = "<FruitIsYellow: Fruit must be yellow.>"
+    assert expected == f"{specification!r}"

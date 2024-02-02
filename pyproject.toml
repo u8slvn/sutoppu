@@ -1,15 +1,13 @@
 [tool.poetry]
 name = "sutoppu"
-
 version = "1.0.0"
 description = "A simple python implementation of Specification pattern."
 authors = ["u8slvn <u8slvn@gmail.com>"]
-
 license = "MIT"
 readme = "README.md"
+packages = [{include = "sutoppu.py", from = "src"}]
 repository = "https://github.com/u8slvn/sutoppu"
 homepage = "https://github.com/u8slvn/sutoppu"
-
 classifiers = [
     "Intended Audience :: Developers",
     "Development Status :: 5 - Production/Stable",
@@ -32,7 +30,6 @@ keywords=[
     "business-rules",
     "verification",
 ]
-
 include = [
     "LICENSE",
     "CHANGELOG.md",
@@ -45,11 +42,52 @@ python = "^3.8.1"
 [tool.poetry.dev-dependencies]
 pytest-cov = "^4.0.0"
 pytest-mock = "^3.10.0"
-flake8 = "^6.0.0"
-black = "^23.1.0"
 pytest = "^7.2.2"
 mypy = "^1.1.1"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.8.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+files = "src/"
+mypy_path = "src/"
+namespace_packages = true
+show_error_codes = true
+ignore_missing_imports = true
+strict = true
+
+[tool.black]
+line_length = 88
+
+[tool.ruff]
+fix = true
+line-length = 88
+extend-select = [
+    "I",   # isort
+    "N",   # pep8-naming
+]
+
+[tool.ruff.isort]
+force-single-line = true
+lines-between-types = 1
+lines-after-imports = 2
+required-imports = [
+    "from __future__ import annotations",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "raise NotImplementedError",
+]
+
+[tool.pytest.ini_options]
+pythonpath = "src/"
+testpaths = ["tests"]
+addopts = [
+    "--cov=src/",
+    "--import-mode=importlib",
+]

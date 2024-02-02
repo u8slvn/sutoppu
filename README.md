@@ -47,7 +47,7 @@ class FruitIsBitter(Specification):
 
 class FruitIsSweet(Specification):
     description = 'The given fruit must be sweet.'
-    
+
     def is_satisfied_by(self, fruit: Fruit) -> bool:
         return fruit.sweet is True
 

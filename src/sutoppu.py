@@ -8,12 +8,16 @@ https://www.opensource.org/licenses/mit-license.php
 from __future__ import annotations
 
 import functools
-from abc import ABCMeta, abstractmethod
+
+from abc import ABCMeta
+from abc import abstractmethod
+
 
 __all__ = ["Specification"]
 __version__ = "1.0.0"
 
-from typing import Callable, Any
+from typing import Any
+from typing import Callable
 
 
 class _SpecificationMeta(ABCMeta):
@@ -25,15 +29,15 @@ class _SpecificationMeta(ABCMeta):
     """
 
     def __new__(
-        mcs,
+        cls,
         name: str,
         bases: tuple[type, ...],
         namespace: dict[str, Any],
     ) -> _SpecificationMeta:
-        cls = super().__new__(mcs, name, bases, namespace)
-        if hasattr(cls, "is_satisfied_by") and hasattr(cls, "_report_errors"):
-            cls.is_satisfied_by = cls._report_errors(cls.is_satisfied_by)
-        return cls
+        class_ = super().__new__(cls, name, bases, namespace)
+        if hasattr(class_, "is_satisfied_by") and hasattr(class_, "_report_errors"):
+            class_.is_satisfied_by = class_._report_errors(class_.is_satisfied_by)
+        return class_
 
 
 class Specification(metaclass=_SpecificationMeta):
@@ -44,14 +48,16 @@ class Specification(metaclass=_SpecificationMeta):
     description = "No description provided."
 
     def __init__(self) -> None:
-        self.errors: dict = {}
+        self.errors: dict[str, str] = {}
 
     @classmethod
-    def _report_errors(cls, func) -> Callable[[Any], bool]:
+    def _report_errors(
+        cls, func: Callable[[Specification, Any], bool]
+    ) -> Callable[[Specification, Any], bool]:
         @functools.wraps(func)
-        def wrapper(self, *args, **kwargs) -> bool:
+        def wrapper(self: Specification, candidate: Any) -> bool:
             self.errors = {}  # reset the errors dict
-            result = func(self, *args, **kwargs)
+            result = func(self, candidate)
             self._report_error(result)
             return result
 
@@ -96,7 +102,7 @@ class _AndOrSpecification(Specification):
         super().__init__()
         self._specs = (spec_a, spec_b)
 
-    def _report_error(self, _) -> None:
+    def _report_error(self, _: bool) -> None:
         """Gets the children spec errors and merge them into its own.
         The goal behind this it to propagate the errors through all the
         parents specifications.
