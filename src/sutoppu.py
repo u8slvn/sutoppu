@@ -1,7 +1,7 @@
 """Sutoppu
 A simple implementation of Specification pattern.
 
-Copyright (C) 2019-2024 - u8slvn - Sylvain Collas
+Copyright (C) 2018 - u8slvn - Sylvain Collas
 This module is released under the MIT License:
 https://www.opensource.org/licenses/mit-license.php
 """
