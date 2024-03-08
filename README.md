@@ -90,7 +90,7 @@ Not:
 
 ### Lighter syntax
 
-If you find the `is_satisfied_by` method inconvenient you can alternatively call the specification as shown below.
+If you find the `is_satisfied_by` method inconvenient, you can alternatively call the specification as shown below.
 
 ```python
 >>> lemon = Fruit(color='yellow', sweet=False, bitter=True)
@@ -101,7 +101,7 @@ False
 
 ### Error reporting
 
-It can be difficult to know which specification failed in complex concatenated rules. Sutoppu allows to list all the failed specifications by getting the `errors` attribute after use.
+It can be difficult to know which specification failed in complex concatenated rules. Sutoppu allows listing all the failed specifications by getting the `errors` attribute after use.
 The `errors` attribute is reset each time the specification is used. For each failed specification, it returns a dict with the name of the specification class as key and the description provided in the class as value. In the case where the specification failed with a `not` condition, the description is prefixed with `Not ~`.
 
 ```python
