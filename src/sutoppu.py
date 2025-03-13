@@ -293,9 +293,12 @@ class _NotSpecification(Specification[T]):
     the component specification.
     """
 
+    description_format = "Expected condition to NOT satisfy: {0}"
+
     def __init__(self, spec: Specification[T]) -> None:
         super().__init__()
         self._spec = spec
+        self.description = self.description_format.format(self._spec.description)
 
     def _report_error(self, result: bool) -> None:
         """Report errors for the negated specification.
@@ -306,9 +309,8 @@ class _NotSpecification(Specification[T]):
         Args:
             result: Result of the negated validation
         """
-        if not result:
-            description = f"Not ~ {self._spec.description}"
-            self.errors.update({self._spec.class_name: description})
+        if result is False:
+            self.errors.update({self._spec.class_name: self.description})
 
     def is_satisfied_by(self, candidate: T) -> bool:
         """Evaluate the candidate with negated logic.

@@ -17,10 +17,16 @@ from tests.conftest import orange
             False,
             {
                 "FruitIsSweet": "Fruit must be sweet.",
-                "FruitIsBitter": "Not ~ Fruit must be bitter.",
+                "FruitIsBitter": "Expected condition to NOT satisfy: Fruit must be bitter.",
             },
         ),
-        (orange, False, {"FruitIsBitter": "Not ~ Fruit must be bitter."}),
+        (
+            orange,
+            False,
+            {
+                "FruitIsBitter": "Expected condition to NOT satisfy: Fruit must be bitter."
+            },
+        ),
         (avocado, False, {"FruitIsSweet": "Fruit must be sweet."}),
     ],
 )
@@ -37,7 +43,9 @@ def test_report_reset_after_two_uses():
 
     result = specification.is_satisfied_by(orange)
 
-    expected_failed = {"FruitIsBitter": "Not ~ Fruit must be bitter."}
+    expected_failed = {
+        "FruitIsBitter": "Expected condition to NOT satisfy: Fruit must be bitter."
+    }
     assert result is False
     assert specification.errors == expected_failed
 

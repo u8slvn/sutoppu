@@ -162,7 +162,7 @@ Key features of error reporting:
 - The `errors` dictionary is reset before each validation
 - Keys are specification class names
 - Values are the descriptions defined in the specifications
-- Negated specifications that fail show "Not ~" prefixed descriptions
+- Negated specifications that fail show "Expected condition to NOT satisfy: [original description]" as description
 
 ## Real-World Examples
 
@@ -266,7 +266,7 @@ print("Failure reasons:", promotion_eligible.errors)
 #   'InPromotionCategory': 'Product must be in eligible promotion category.',
 #   'PriceThreshold': 'Product must cost at least $50.',
 #   'NewArrival': 'Product must be added within the last 30 days.',
-#   'InStock': 'Not ~ Product must be in stock.'
+#   'InStock': 'Expected condition to NOT satisfy: Product must be in stock.'
 # }
 ```
 
