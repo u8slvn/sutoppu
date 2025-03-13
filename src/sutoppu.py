@@ -116,7 +116,7 @@ class _AndOrSpecification(Specification[T]):
         The result parameter is ignored in this case.
         """
         for spec in self._specs:
-            self.errors = {**self.errors, **spec.errors}
+            self.errors.update(spec.errors)
 
     def is_satisfied_by(self, candidate: T) -> bool:
         results = (spec.is_satisfied_by(candidate) for spec in self._specs)
