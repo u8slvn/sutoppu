@@ -104,6 +104,7 @@ print(valid_user.is_satisfied_by(user2))  # False
 # Check which rules failed
 valid_user.is_satisfied_by(user2)
 print(valid_user.errors)
+
 # {
 #    'ValidUsername': 'Username must be between 3 and 20 characters.',
 #    'ValidEmail': 'Email must contain @ symbol.',
@@ -250,14 +251,17 @@ ineligible_product = Product(
 # Check eligibility for both products
 is_eligible = promotion_eligible.is_satisfied_by(eligible_product)
 print(f"Electronics product eligible for promotion: {is_eligible}")
+
 # Electronics product eligible for promotion: True
 
 is_ineligible = promotion_eligible.is_satisfied_by(ineligible_product)
 print(f"Book eligible for promotion: {is_ineligible}")
+
 # Book eligible for promotion: False
 
 # Display failure reasons for the ineligible product
 print("Failure reasons:", promotion_eligible.errors)
+
 # Failure reasons:: {
 #   'InPromotionCategory': 'Product must be in eligible promotion category.',
 #   'PriceThreshold': 'Product must cost at least $50.',
@@ -338,10 +342,12 @@ regular_user = User(
 # Check permission
 has_access = can_access_sensitive_data.is_satisfied_by(regular_user)
 print(f"Regular user can access sensitive data: {has_access}")
+
 # Regular user can access sensitive data: False
 
 # Check which rules failed
 print("Failed rules:", can_access_sensitive_data.errors)
+
 # Failed rules: {
 #   'AdminRole': 'User must have admin role.',
 #   'ITDepartment': 'User must be in IT department.',
