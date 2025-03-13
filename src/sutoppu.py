@@ -8,6 +8,7 @@ https://www.opensource.org/licenses/mit-license.php
 from __future__ import annotations
 
 import functools
+import sys
 
 from abc import ABCMeta
 from abc import abstractmethod
@@ -16,6 +17,12 @@ from typing import Any
 from typing import Callable
 from typing import Generic
 from typing import TypeVar
+
+
+if sys.version_info >= (3, 11):
+    from typing import Self
+else:
+    from typing_extensions import Self
 
 
 __all__ = ["Specification"]
@@ -60,10 +67,10 @@ class Specification(Generic[T], metaclass=_SpecificationMeta):
 
     @classmethod
     def _report_errors(
-        cls, func: Callable[[Specification[T], T], bool]
-    ) -> Callable[[Specification[T], T], bool]:
+        cls, func: Callable[[Self, T], bool]
+    ) -> Callable[[Self, T], bool]:
         @functools.wraps(func)
-        def wrapper(self: Specification[T], candidate: T) -> bool:
+        def wrapper(self: Self, candidate: T) -> bool:
             self.errors = {}  # reset the errors dict
             result = func(self, candidate)
             self._report_error(result)

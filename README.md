@@ -40,7 +40,7 @@ See [original paper](https://www.martinfowler.com/apsupp/spec.pdf) by Eric Evans
 pip install sutoppu
 ```
 
-Sutoppu has no external dependencies and is compatible with Python 3.8+.
+Sutoppu is compatible with Python 3.8+ and has no external dependencies for Python 3.11+. For Python 3.8-3.10, it requires only the lightweight typing-extensions package.
 
 ## Core Concepts
 
