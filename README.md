@@ -5,7 +5,6 @@
 [![CI](https://github.com/u8slvn/sutoppu/actions/workflows/ci.yml/badge.svg)](https://github.com/u8slvn/sutoppu/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/u8slvn/sutoppu/badge.svg?branch=master)](https://coveralls.io/github/u8slvn/sutoppu?branch=master)
 [![Project license](https://img.shields.io/pypi/l/sutoppu)](https://pypi.org/project/sutoppu/)
-[![Code Style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 **Sutoppu** (ストップ - Japanese from English *Stop*) is a lightweight implementation of the Specification pattern for Python, enabling elegant business rule composition through boolean logic.
 
@@ -62,7 +61,7 @@ from sutoppu import Specification
 
 # Define a domain entity
 class User:
-    def __init__(self, username: str, email: str, age: int):
+    def __init__(self, username: str, email: str, age: int) -> None:
         self.username = username
         self.email = email
         self.age = age

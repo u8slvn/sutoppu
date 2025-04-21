@@ -9,8 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Add python 3.13 support.
+
+### Changed
+
+* Improve NotSpecification description format, it now starts with "Expected condition to NOT satisfy:".
+* Improve whole documentation, including examples and usage.
+* Implement self type annotations for python 3.11+.
+
+## 1.1.0 (2024-02-02)
+
+### Added
+
 * Add generic typing for `Specification` base class.
-* Add python 3.12.
+* Add python 3.12 support.
 
 ## 1.0.0 (2022-03-09)
 
